@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import pygame.image
@@ -10,18 +11,17 @@ from code.Const import WIN_WIDTH, C_ORANGE, MENU_OPTION, C_WHITE, C_YELLOW
 class Menu:
     def __init__(self, window):
         self.window = window
-        self.surf = pygame.image.load('./asset/Background/5Bg.png').convert_alpha()
+        self.surf = pygame.image.load('./asset/level1BG0.png')
         self.rect = self.surf.get_rect(left=0, top=0)
 
-    def run(self):
+    def run(self, ):
         menu_option = 0
-        pygame.mixer_music.load('./asset/TrilhaSonora/TrilhaSonora.mp3')
+        pygame.mixer_music.load('./asset/TrilhaSonora.mp3')
         pygame.mixer_music.play(-1)
         while True:
             # DRAW IMAGES
             self.window.blit(source=self.surf, dest=self.rect)
-            self.menu_text(50, "Samurai", C_WHITE, ((WIN_WIDTH / 2), 70))
-            self.menu_text(50, "Adventure", C_WHITE, ((WIN_WIDTH / 2), 120))
+            self.menu_text(50, "Samurai Adventure", C_WHITE, ((WIN_WIDTH / 2), 90))
 
             for i in range(len(MENU_OPTION)):
                 if i == menu_option:
