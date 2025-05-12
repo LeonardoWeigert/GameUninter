@@ -1,12 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from abc import ABC
 
-from Entity import Entity
+from code.Const import SPEED_ENTITY, WIN_WIDTH
+from code.Entity import Entity
 
 
-class Enemy(Entity):
-    def __init__(self):
-        pass
+class Enemy(Entity, ABC):
+    def __init__(self, name: str, position: tuple) -> None:
+        super().__init__(name, position)
 
-    def mone(self, ):
-        pass
+    def move(self, ):
+        self.rect.centerx -= SPEED_ENTITY[self.name]
+        if self.rect.right <= 0:
+            self.rect.left = WIN_WIDTH
