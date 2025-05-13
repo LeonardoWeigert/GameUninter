@@ -7,6 +7,8 @@ from pygame.font import Font
 from code.Const import WIN_HEIGHT, C_WHITE, SPAWN_ENEMY, SPAWN_ENEMY_TIME
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
+from code.EntityMediator import EntityMediator
+from code.Player import Player
 
 
 class Level:
@@ -15,9 +17,9 @@ class Level:
         self.window = window
         self.name = name
         self.game_mode = game_mode
-        self.entity_list: list[Entity] = []
-        self.entity_list.extend(EntityFactory.get_entity('level1BG'))
-        self.entity_list.append(EntityFactory.get_entity('player1-11'))
+        self.e_list: list[Entity] = []
+        self.e_list.extend(EntityFactory.get_entity('level1BG'))
+        self.e_list.append(EntityFactory.get_entity('player1-11'))
 
         # Generate Enemy Timer
         pygame.time.set_timer(SPAWN_ENEMY, SPAWN_ENEMY_TIME)
@@ -26,21 +28,28 @@ class Level:
         clock = pygame.time.Clock()
         while True:
             clock.tick(60)
-            for ent in self.entity_list:
+            for ent in self.e_list:
                 self.window.blit(source=ent.surf, dest=ent.rect)
                 ent.move()
+                projectiles = []
+                if isinstance(ent, Player):
+                    if isinstance(ent, Player):
+                        tiro = ent.shoot()
+                        if tiro: projectiles.append(tiro)
+                self.e_list.extend(projectiles)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
                 if event.type == SPAWN_ENEMY:
-                    self.entity_list.append(EntityFactory.get_entity('Enemy1-2'))
+                    self.e_list.append(EntityFactory.get_entity('Enemy1-2'))
 
             self.level_text(14, f'{self.name} - Timeout: {self.timeout / 1000 :.1f}s', C_WHITE, (10, 5))
             self.level_text(14, f'fps: {clock.get_fps() :.0f}', C_WHITE, (10, WIN_HEIGHT - 35))
-            self.level_text(14, f'entidades: {len(self.entity_list)}', C_WHITE, (10, WIN_HEIGHT - 20))
+            self.level_text(14, f'entidades: {len(self.e_list)}', C_WHITE, (10, WIN_HEIGHT - 20))
             pygame.display.flip()
-
+            EntityMediator.verify_collision(e_list=self.e_list)
+            EntityMediator.verify_life_entity(e_list=self.e_list)
 
     def level_text(self, text_size: int, text: str, text_color: int, text_pos: tuple):
         text_font: Font = pygame.font.SysFont(name="Lucida Sans Typewriter", size=text_size)

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from abc import ABC
 
-from code.Const import SPEED_ENTITY, WIN_WIDTH
+from code.Const import SPEED_ENTITY
 from code.Entity import Entity
 
 
@@ -12,5 +12,3 @@ class Enemy(Entity, ABC):
 
     def move(self, ):
         self.rect.centerx -= SPEED_ENTITY[self.name]
-        if self.rect.right <= 0:
-            self.rect.left = WIN_WIDTH

@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 import pygame.key
 
-from code.Const import SPEED_ENTITY, LENGTH_PLAYER_BOX_MAX_Y, WIN_HEIGHT, WIN_WIDTH, LENGTH_PLAYER_BOX_MAX_X
+from code.Const import SPEED_ENTITY, LENGTH_PLAYER_BOX_MAX_Y, WIN_HEIGHT, LENGTH_PLAYER_BOX_MAX_X, SHOOT_DELAY_ENTITY
 from code.Entity import Entity
+from code.PlayerShoot import PlayerShoot
 
 
 class Player(Entity):
     def __init__(self, name: str, position: tuple) -> None:
         super().__init__(name, position)
+        self.shoot_delay = SHOOT_DELAY_ENTITY[self.name]
 
     def update(self, ):
         pass
@@ -31,3 +33,11 @@ class Player(Entity):
         if pressed_k[pygame.K_RIGHT] and self.rect.right < LENGTH_PLAYER_BOX_MAX_X or pressed_k[pygame.K_d] and self.rect.right < LENGTH_PLAYER_BOX_MAX_X:
             self.rect.centerx += SPEED_ENTITY[self.name]
         pass
+
+    def shoot(self):
+        self.shoot_delay -= 1
+        if self.shoot_delay == 0:
+            self.shoot_delay = SHOOT_DELAY_ENTITY[self.name]
+            pressed_k = pygame.key.get_pressed()
+            if pressed_k[pygame.K_SPACE]:
+                return PlayerShoot(name=f'Arrow', position=(self.rect.centerx, self.rect.centery))
