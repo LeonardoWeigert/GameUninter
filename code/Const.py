@@ -32,8 +32,7 @@ SPEED_ENTITY = {
     #Speed Enemy
     'Enemy1-2': 1,
     #Shoot Player
-    'Arrow': 2,
-}
+    'Arrow': 2,    }
 
 # PLAYER BOX
 LENGTH_PLAYER_BOX_MAX_Y = 300
@@ -50,20 +49,54 @@ SPAWN_ENEMY_TIME = 3000
 # Enemy Life
 ENTITY_LIFE = {
     # Life Background
-    'level1BG0': 9999,  # 1
-    'level1BG1': 9999,  # 8
-    'level1BG2': 9999,  # 7
-    'level1BG3': 9999,  # 6
-    'level1BG4': 9999,  # 5
-    'level1BG5': 9999,  # 4
-    'level1BG6': 9999,  # 3
-    'level1BG7': 9999,  # 2
+    'level1BG0': 9999,
+    'level1BG1': 9999,
+    'level1BG2': 9999,
+    'level1BG3': 9999,
+    'level1BG4': 9999,
+    'level1BG5': 9999,
+    'level1BG6': 9999,
+    'level1BG7': 9999,
     # LIFE Player
     'player1-11': 100,
     # LIFE Enemy
-    'Enemy1-2': 75,
+    'Enemy1-2': 80,
     'Arrow': 9999,
-               }
+    }
 
-# Intervalo entre os tiros
-SHOOT_DELAY_ENTITY = {'player1-11': 75}
+SHOOT_DELAY_ENTITY = {'player1-11': 35}
+
+DAMAGE_GENERAL = {
+    # Damage Background
+    'level1BG0': 0,
+    'level1BG1': 0,
+    'level1BG2': 0,
+    'level1BG3': 0,
+    'level1BG4': 0,
+    'level1BG5': 0,
+    'level1BG6': 0,
+    'level1BG7': 0,
+    # Damage Player
+    'player1-11': 1,
+    'Arrow': 20,
+    # Damage Enemy
+    'Enemy1-2': 20,
+    }
+
+SCORE = {
+    # Score Background
+    'level1BG0': 0,
+    'level1BG1': 0,
+    'level1BG2': 0,
+    'level1BG3': 0,
+    'level1BG4': 0,
+    'level1BG5': 0,
+    'level1BG6': 0,
+    'level1BG7': 0,
+    # Score Player
+    'player1-11': 0,
+    # Score Enemy
+    'Enemy1-2': 50,
+    # Score Projection
+    'Arrow': 0,
+    }

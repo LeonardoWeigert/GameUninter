@@ -1,58 +1,75 @@
 #!/usr/bin/python
-#-*- coding: utf-8 -*-
-import pygame
-from pygame import Surface, Rect
-from pygame.font import Font
+# -*- coding: utf-8 -*-
 
-from code.Const import WIN_HEIGHT, C_WHITE, SPAWN_ENEMY, SPAWN_ENEMY_TIME
-from code.Entity import Entity
+import pygame
+from code.Const import SPAWN_ENEMY, SPAWN_ENEMY_TIME, C_WHITE
 from code.EntityFactory import EntityFactory
 from code.EntityMediator import EntityMediator
-from code.Player import Player
-
+from code.PlayerShoot import PlayerShoot  # identifica quando é flecha
+from code.Enemy import Enemy              # identifica inimigos
 
 class Level:
     def __init__(self, window, name, game_mode):
-        self.timeout = 60000
-        self.window = window
-        self.name = name
+        self.window    = window
+        self.name      = name
         self.game_mode = game_mode
-        self.e_list: list[Entity] = []
-        self.e_list.extend(EntityFactory.get_entity('level1BG'))
-        self.e_list.append(EntityFactory.get_entity('player1-11'))
+        self.timeout_level = 30000
+        self.timeout_timer = pygame.time.get_ticks()
 
-        # Generate Enemy Timer
+        # setup inicial: background + player + enemy's spawn
+        self.e_list = []
+        self.e_list.extend(EntityFactory.get_entity('level1BG'))
+        self.player = EntityFactory.get_entity('player1-11')
+        self.e_list.append(self.player)
         pygame.time.set_timer(SPAWN_ENEMY, SPAWN_ENEMY_TIME)
 
     def run(self):
         clock = pygame.time.Clock()
         while True:
             clock.tick(60)
-            for ent in self.e_list:
-                self.window.blit(source=ent.surf, dest=ent.rect)
-                ent.move()
-                projectiles = []
-                if isinstance(ent, Player):
-                    if isinstance(ent, Player):
-                        tiro = ent.shoot()
-                        if tiro: projectiles.append(tiro)
-                self.e_list.extend(projectiles)
+            count_time = pygame.time.get_ticks() - self.timeout_timer
+            timer_duration = max(0, self.timeout_level - count_time)
+            font = pygame.font.SysFont("04b_03", 14)
+
+            # 1) Eventos (spawn de inimigos e tiro)
+            projectiles: list[PlayerShoot] = []
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
+                    pygame.quit(); quit()
                 if event.type == SPAWN_ENEMY:
                     self.e_list.append(EntityFactory.get_entity('Enemy1-2'))
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                    tiro = self.player.shoot()
+                    if tiro:
+                        projectiles.append(tiro)
+            # 2) Desenho e movimento
+            # CHANGED: só as flechas usam move(enemies), os demais continuam sem alteração
+            enemies = [e for e in self.e_list if isinstance(e, Enemy)]
+            for ent in self.e_list:
+                self.window.blit(ent.surf, ent.rect)
+                if isinstance(ent, PlayerShoot):
+                    ent.move(enemies)  # flecha com micro-passos
+                else:
+                    ent.move()         # demais entidades usam move() padrão
+#                if ent.name == 'player1-11':
+#                    txt2 = f'FPS: {clock.get_fps():.0f}'
+                if ent.name == 'player1-11':
+                    health = font.render(f'Vida: {self.player.vida}', True, C_WHITE).convert_alpha()
+                    score = font.render(f'Score: {self.player.getscore}', True, C_WHITE).convert_alpha()
+                    self.window.blit(health, (10, 25))
+                    self.window.blit(score, (10, 35))
+            # 3) Acrescenta as flechas no fim da lista
+            self.e_list.extend(projectiles)
 
-            self.level_text(14, f'{self.name} - Timeout: {self.timeout / 1000 :.1f}s', C_WHITE, (10, 5))
-            self.level_text(14, f'fps: {clock.get_fps() :.0f}', C_WHITE, (10, WIN_HEIGHT - 35))
-            self.level_text(14, f'entidades: {len(self.e_list)}', C_WHITE, (10, WIN_HEIGHT - 20))
+
+            fps  = font.render(f'FPS: {clock.get_fps():.0f}', True, C_WHITE).convert_alpha()
+            timer = font.render(f'Tempo: {timer_duration/1000:.1f}s', True, C_WHITE).convert_alpha()
+            self.window.blit(fps,  (10, 5))
+            self.window.blit(timer,  (10, 45))
             pygame.display.flip()
+
+            # 4) Colisões gerais e remoção de entidades sem vida
             EntityMediator.verify_collision(e_list=self.e_list)
             EntityMediator.verify_life_entity(e_list=self.e_list)
 
-    def level_text(self, text_size: int, text: str, text_color: int, text_pos: tuple):
-        text_font: Font = pygame.font.SysFont(name="Lucida Sans Typewriter", size=text_size)
-        text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
-        text_rect: Rect = text_surf.get_rect(left=text_pos[0], top=text_pos[1])
-        self.window.blit(source=text_surf, dest=text_rect)
+

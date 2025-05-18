@@ -9,6 +9,7 @@ from code.Entity import Entity
 class Enemy(Entity, ABC):
     def __init__(self, name: str, position: tuple) -> None:
         super().__init__(name, position)
+        self.damaged_player_tf = False
 
     def move(self, ):
         self.rect.centerx -= SPEED_ENTITY[self.name]
