@@ -44,13 +44,3 @@ class Player(Entity):
                 self._last_shot_time = tickratecooldown
                 return PlayerShoot(name='Arrow', position=(self.rect.centerx, self.rect.centery))
         return None
-#        self.shoot_delay -= 1
-#        if self.shoot_delay == 0:
-#            self.shoot_delay = SHOOT_DELAY_ENTITY[self.name]
-#            pressed_k = pygame.key.get_pressed()
-#            if pressed_k[pygame.K_SPACE]:
-#                return PlayerShoot(name=f'Arrow', position=(self.rect.centerx, self.rect.centery))
-#            else:
-#                return None
-#        else:
-#            return None

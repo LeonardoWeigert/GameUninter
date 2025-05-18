@@ -2,28 +2,31 @@
 # -*- coding: utf-8 -*-
 
 import pygame
-from code.Const import SPAWN_ENEMY, SPAWN_ENEMY_TIME, C_WHITE
+from code.Const import SPAWN_ENEMY, SPAWN_ENEMY_TIME, C_WHITE,  TIMEOUT_LEVEL
 from code.EntityFactory import EntityFactory
 from code.EntityMediator import EntityMediator
+from code.Player import Player
 from code.PlayerShoot import PlayerShoot  # identifica quando é flecha
 from code.Enemy import Enemy              # identifica inimigos
 
 class Level:
-    def __init__(self, window, name, game_mode):
+    def __init__(self, window, name, game_mode, score_count: list[int]):
         self.window    = window
         self.name      = name
         self.game_mode = game_mode
-        self.timeout_level = 30000
+        self.timeout_level = TIMEOUT_LEVEL
         self.timeout_timer = pygame.time.get_ticks()
 
         # setup inicial: background + player + enemy's spawn
         self.e_list = []
-        self.e_list.extend(EntityFactory.get_entity('level1BG'))
+        self.e_list.extend(EntityFactory.get_entity(self.name + 'BG'))
         self.player = EntityFactory.get_entity('player1-11')
+        self.alive = True
         self.e_list.append(self.player)
+        player_score = score_count[0]
         pygame.time.set_timer(SPAWN_ENEMY, SPAWN_ENEMY_TIME)
 
-    def run(self):
+    def run(self,score_count: list[int]):
         clock = pygame.time.Clock()
         while True:
             clock.tick(60)
@@ -42,6 +45,19 @@ class Level:
                     tiro = self.player.shoot()
                     if tiro:
                         projectiles.append(tiro)
+                if timer_duration <= 0:
+                    for ent in self.e_list:
+                        if isinstance(ent, Player) and ent.name == 'player1-11':
+                            player_score = ent.getscore
+                    return True
+
+                player_alive = False
+                for ent in self.e_list:
+                    if isinstance(ent, Player):
+                        player_alive = True
+                if not player_alive:
+                    return False
+
             # 2) Desenho e movimento
             # CHANGED: só as flechas usam move(enemies), os demais continuam sem alteração
             enemies = [e for e in self.e_list if isinstance(e, Enemy)]
@@ -51,13 +67,12 @@ class Level:
                     ent.move(enemies)  # flecha com micro-passos
                 else:
                     ent.move()         # demais entidades usam move() padrão
-#                if ent.name == 'player1-11':
-#                    txt2 = f'FPS: {clock.get_fps():.0f}'
                 if ent.name == 'player1-11':
                     health = font.render(f'Vida: {self.player.vida}', True, C_WHITE).convert_alpha()
                     score = font.render(f'Score: {self.player.getscore}', True, C_WHITE).convert_alpha()
                     self.window.blit(health, (10, 25))
                     self.window.blit(score, (10, 35))
+
             # 3) Acrescenta as flechas no fim da lista
             self.e_list.extend(projectiles)
 
@@ -67,6 +82,7 @@ class Level:
             self.window.blit(fps,  (10, 5))
             self.window.blit(timer,  (10, 45))
             pygame.display.flip()
+
 
             # 4) Colisões gerais e remoção de entidades sem vida
             EntityMediator.verify_collision(e_list=self.e_list)
