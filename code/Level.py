@@ -10,23 +10,25 @@ from code.PlayerShoot import PlayerShoot  # identifica quando é flecha
 from code.Enemy import Enemy              # identifica inimigos
 
 class Level:
-    def __init__(self, window, name, game_mode, score_count: list[int]):
+    def __init__(self, window, level_type, menu_return, player_score=0):
+        # setup inicial: background + player + enemy's spawn
         self.window    = window
-        self.name      = name
-        self.game_mode = game_mode
+        self.name      = level_type
+        self.game_mode = menu_return
         self.timeout_level = TIMEOUT_LEVEL
         self.timeout_timer = pygame.time.get_ticks()
 
-        # setup inicial: background + player + enemy's spawn
         self.e_list = []
         self.e_list.extend(EntityFactory.get_entity(self.name + 'BG'))
         self.player = EntityFactory.get_entity('player1-11')
+        self.player.get_score = player_score
+        self.total_score = player_score
         self.alive = True
         self.e_list.append(self.player)
-        player_score = score_count[0]
+        self.player._score = player_score
         pygame.time.set_timer(SPAWN_ENEMY, SPAWN_ENEMY_TIME)
 
-    def run(self,score_count: list[int]):
+    def run(self,):
         clock = pygame.time.Clock()
         while True:
             clock.tick(60)
@@ -46,9 +48,7 @@ class Level:
                     if tiro:
                         projectiles.append(tiro)
                 if timer_duration <= 0:
-                    for ent in self.e_list:
-                        if isinstance(ent, Player) and ent.name == 'player1-11':
-                            player_score = ent.getscore
+                    
                     return True
 
                 player_alive = False
@@ -69,7 +69,7 @@ class Level:
                     ent.move()         # demais entidades usam move() padrão
                 if ent.name == 'player1-11':
                     health = font.render(f'Vida: {self.player.vida}', True, C_WHITE).convert_alpha()
-                    score = font.render(f'Score: {self.player.getscore}', True, C_WHITE).convert_alpha()
+                    score = font.render(f'Score: {self.player.get_score}', True, C_WHITE).convert_alpha()
                     self.window.blit(health, (10, 25))
                     self.window.blit(score, (10, 35))
 
@@ -87,5 +87,3 @@ class Level:
             # 4) Colisões gerais e remoção de entidades sem vida
             EntityMediator.verify_collision(e_list=self.e_list)
             EntityMediator.verify_life_entity(e_list=self.e_list)
-
-

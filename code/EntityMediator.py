@@ -22,30 +22,6 @@ class EntityMediator:
 
     @staticmethod
     def verify_coll_damage(Dmg1, Dmg2):
-#        valid_interaction = False
-#        if isinstance(Dmg1, Enemy) and isinstance(Dmg2, PlayerShoot):
-#            valid_interaction = True
-#        elif isinstance(Dmg1, PlayerShoot) and isinstance(Dmg2, Enemy):
-#            valid_interaction = True
-#        elif isinstance(Dmg1, Enemy) and isinstance(Dmg2, Player):
-#            valid_interaction = True
-#        elif isinstance(Dmg1, Player) and isinstance(Dmg2, Enemy):
-#            valid_interaction = True
-#        if valid_interaction:
-#            if (Dmg1.rect.right >= Dmg2.rect.left and
-#                    Dmg1.rect.left <= Dmg2.rect.right and
-#                    Dmg1.rect.bottom >= Dmg2.rect.top and
-#                    Dmg1.rect.top <= Dmg2.rect.bottom):
-#                if isinstance(Dmg1, PlayerShoot) or isinstance(Dmg2, PlayerShoot):
-#                    Dmg1.vida -= Dmg2.general_damage
-#                    Dmg2.vida -= Dmg1.general_damage
-#                    Dmg1.last_damage_taken = Dmg2.name
-#                    Dmg2.last_damage_taken = Dmg1.name
-#                else: # identifique qual é o inimigo e qual é o player
-#                    enemy, player = (Dmg1, Dmg2) if isinstance(Dmg1, Enemy) else (Dmg2, Dmg1)
-#                    player.vida -= enemy.general_damage
-#                    player.last_damage_taken = enemy.name
-# --- 1) Colisão flecha ↔ inimigo (mantém igual) ---
         if ((isinstance(Dmg1, Enemy) and isinstance(Dmg2, PlayerShoot)) or
             (isinstance(Dmg1, PlayerShoot) and isinstance(Dmg2, Enemy))):
 
@@ -82,7 +58,7 @@ class EntityMediator:
         if enemy.last_damage_taken == 'Arrow':
             for ent in enti_list:
                 if ent.name == 'player1-11':
-                    ent.getscore += enemy.getscore
+                    ent.get_score += enemy.get_score
                     pass
 
     @staticmethod

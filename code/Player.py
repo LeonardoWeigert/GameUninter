@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import pygame.key
 
-from code.Const import SPEED_ENTITY, LENGTH_PLAYER_BOX_MAX_Y, WIN_HEIGHT, LENGTH_PLAYER_BOX_MAX_X
+from code.Const import SPEED_ENTITY, LENGTH_PLAYER_BOX_MAX_Y, WIN_HEIGHT, LENGTH_PLAYER_BOX_MAX_X, SCORE
 from code.Entity import Entity
 from code.PlayerShoot import PlayerShoot
 
@@ -12,6 +12,7 @@ class Player(Entity):
         super().__init__(name, position)
         self.shoot_ms_cooldown = 300
         self._last_shot_time = 0
+#        self.getscore = SCORE[self.name]
 
     def update(self, ):
         pass

@@ -16,7 +16,7 @@ class Entity(ABC):
         self.speed = 0
         self.vida = ENTITY_LIFE[self.name]
         self.general_damage = DAMAGE_GENERAL[self.name]
-        self.getscore = SCORE[self.name]
+        self.get_score = SCORE[self.name]
         self.last_damage_taken = 'None'
 
 

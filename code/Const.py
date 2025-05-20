@@ -10,12 +10,14 @@ C_ORANGE = (255, 128, 0)
 C_WHITE = (255, 255, 255)
 C_BLACK = (0, 0, 0)
 C_YELLOW = (255, 253, 85)
-C_RED = (237,56,20)
+C_RED = (237, 56, 20)
+C_BLUE = (0, 35, 245)
+C_GOLD = (212, 175, 55)
 
 # MENU
-MENU_OPTION = ('NEW GAME 1P',
-               'COOPERATIVE GAME (soon)',
-               'SCORE',
+MENU_OPTION = ('NEW GAME',
+               'SCORE RANK',
+               'CONTROL',
                'EXIT')
 
 # SPEED FOR ENTITY'S
@@ -40,6 +42,7 @@ SPEED_ENTITY = {
     'level3BG2': 0,
     'level3BG3': 0,
     'level3BG4': 0,
+    'ScoreBG.png': 0,
     #Speed Player
     'player1-11': 5,
     #Speed Enemy
@@ -113,6 +116,7 @@ DAMAGE_GENERAL = {
     'level3BG2': 0,
     'level3BG3': 0,
     'level3BG4': 0,
+    'ScoreBG.png': 0,
     # Damage Player
     'player1-11': 1,
     'Arrow': 20,
@@ -142,6 +146,7 @@ SCORE = {
     'level3BG2': 0,
     'level3BG3': 0,
     'level3BG4': 0,
+    'ScoreBG.png': 0,
     # Score Player
     'player1-11': 0,
     # Score Enemy
@@ -151,8 +156,19 @@ SCORE = {
     }
 
 # TIMEOUT W/ MS - LEVEL
-TIMEOUT_LEVEL = 15000
+TIMEOUT_LEVEL = 10000
 TIMEOUT_LEVEL_CHECK = pygame.USEREVENT + 2
-TIMEOUT_LEVEL_VERIFY = 150
+TIMEOUT_LEVEL_VERIFY = 100
 TIMEOUT_GAME_OVER = 4000
 TIMEOUT_CHANGE_LEVEL = 2000
+
+POSITION_SCORE_DISPLAY = {'Title': (WIN_WIDTH / 2, 50),
+             'Prompt': (WIN_WIDTH / 2, 80),
+             'Label': (WIN_WIDTH / 2, 90),
+             'Name': (WIN_WIDTH / 2, 110),
+             0: (WIN_WIDTH / 2, 110),
+             1: (WIN_WIDTH / 2, 130),
+             2: (WIN_WIDTH / 2, 150),
+             3: (WIN_WIDTH / 2, 170),
+             4: (WIN_WIDTH / 2, 190),
+             }
